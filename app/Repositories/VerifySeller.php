@@ -3,41 +3,35 @@
 namespace App\Repositories;
 use App\User;
 use App\Seller;
-use Illuminate\Http\Request;
 
-class VerifySeller{
+class VerifySeller{    
     
-    public function __construct(Request $request){        
-        $this->request = $request;
+    public function __construct(){       
         
-    }
+    }  
     
     /*
      * Comproeba que el exista el vendedor
      * @return App\Seller
      */
-    public function seller(){
-        $myToken = $this->request->bearerToken();
-        $userId = User::where('api_token',$myToken)->get()->modelKeys();
-        $user = User::find($userId[0]);
+    public function seller(int $userId){      
+        
+        $user = User::find($userId);
         $seller = $user->seller;
         
-        return $seller;
-        //return "venderores numeros";
+        return $seller;        
     }
     
     /*
      * Crear nuevo seller
      * @return App\Seller
      */
-    public function newSeller(){
-        $myToken = $this->request->bearerToken();
-        $userId = User::where('api_token',$myToken)->get()->modelKeys();
+    public function newSeller(int $userId){
         
         $newSeller = new Seller();
-        $newSeller->user_id = $userId[0];
+        $newSeller->user_id = $userId;
         $newSeller->save();
         
-        return $this->seller();
+        return $this->seller($userId);
     }
 }

@@ -18,7 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('users','UserController');
+Route::put('user/cambiartoken','UserController@cambiarToken')->name('users.token');
 Route::apiResource('products', 'ProductController');
 Route::get('myproducts','ProductController@myproducts')->name('products.my');
+Route::get('product/sellers','ProductController@productsSellers')->name('products.sellers');
 Route::apiResource('transactions', 'TransactionController');
 Route::apiResource('categories', 'CategoryController');

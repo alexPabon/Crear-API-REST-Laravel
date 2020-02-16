@@ -6,9 +6,10 @@ use App\Product;
 use App\User;
 use App\Seller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreProduct;
 use Illuminte\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Repositories\VerifySeller;
+
 
 
 class ProductController extends Controller
@@ -16,7 +17,7 @@ class ProductController extends Controller
     protected $verifySeller;
     
     public function __construct(VerifySeller $verifySeller){
-        $this->middleware('auth:api')->except('index','show');        
+        $this->middleware('auth:api')->except('index','show','productsSellers');        
         $this->verifySeller = $verifySeller;
     }
     
@@ -41,8 +42,8 @@ class ProductController extends Controller
         //return $productos->toJson();
         //return $productos->toJson(JSON_PRETTY_PRINT);
         //return json_encode($productos);
-        return response($json)->header('Content-Type','application/json');
-       
+        
+        return response($json)->header('Content-Type','application/json');       
       
     }
     
@@ -53,12 +54,15 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {        
-        $seller = $this->verifySeller->seller();
+    public function store(StoreProduct $request)
+    {   
+        $validate = $request->validated();
         
-        if($seller==null)
-            $seller = $this->verifySeller->newSeller();            
+        $userId = auth()->user()->id;
+        $seller = $this->verifySeller->seller($userId);
+        
+        if(is_null($seller))
+            $seller = $this->verifySeller->newSeller($userId);            
         
         $product = new Product();
         $product->name = $request->name;
@@ -67,11 +71,14 @@ class ProductController extends Controller
         $product->status = $request->status;
         $product->seller_id = $seller->id;
         
+        $mensaje = ['store'=>'Guardado Correctamente'];
         
         if(!$product->save())
-            return response('No se gurado el podruc')->header('Content-Type','application/json');
+            $mensaje = ['store'=>'No se gurado el podructo'];
         
-        return response('Guardado Correctamente')->header('Content-Type','application/json');
+        $json = json_encode($mensaje);
+        
+        return response($json)->header('Content-Type','application/json');
         
     }
 
@@ -82,12 +89,11 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
-    {
-       
-        $productoId = Product::where('id',$product->id)->get();
+    {        
+        $productoId = Product::find($product->id);
+        $json = json_encode($productoId);
         
-        return $productoId->toArray();
-              
+        return response($json)->header('Content-Type','application/json');              
     }   
 
     /**
@@ -99,10 +105,12 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $seller = $this->verifySeller->seller();
-        $sellerId = $seller->id;
+        $userId = auth()->user()->id;
+        $seller = $this->verifySeller->seller($userId);
+        $sellerId = $seller->id;        
+        
         if($product->seller_id!=$sellerId)
-            return "No coincide producto con propietario";
+            abort('403','No Autorizado, No puedes editar este producto');
         
         $product->name = $request->name;
         $product->description = $request->description;
@@ -110,8 +118,14 @@ class ProductController extends Controller
         $product->status = $request->status;
         $product->seller_id = $seller->id;
         
-        if($product->update())
-            return "Actualizacion correcta";            
+        $mensaje = ["update"=>"Actualizacion correcta"];
+        
+        if(!$product->update())
+            $mensaje = ["update"=>"No se pudo actualizar"];
+        
+        $json = json_encode($mensaje);
+        
+        return response($json)->header('Content-Type','application/json');
     }
 
     /**
@@ -122,29 +136,58 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $seller = $this->verifySeller->seller();
-        $sellerId = $seller->id;
+        $userId = auth()->user()->id;
+        $seller = $this->verifySeller->seller($userId);        
+        $sellerId = $seller->id;        
+        
         if($product->seller_id!=$sellerId)
-            return "No coincide producto con propietario";
+            abort('403','No Autorizado, No puedes Borrar este producto');
         
         $product->delete();
-        return "Producto Eliminado";
         
+        $mensaje = ["delete"=>"Borrado correcto"];
+        $json = json_encode($mensaje);
+        
+        return response($json)->header('Content-Type','application/json');        
     }
     
     /*
      * Muestra todos los productos que ha publicado el usuario
+     * @return \Illuminate\Http\Response
      */
     public function myproducts(){
         
-        $seller = $this->verifySeller->seller();
+        $userId = auth()->user()->id;        
+        $seller = $this->verifySeller->seller($userId);
         
-        if($seller==null)
-            return [];
+        if(is_null($seller))
+            return json_encode(["products"=>"No tienes productos"]);
         
-        $product = $seller->product;
-        $json = json_encode($product);
+        $products = $seller->product;
+        $json = json_encode($products);
         
         return response($json)->header('Content-Type','application/json');        
+    }
+    
+    /*
+     * Mustra todos los productos con sus vendedores
+     * @return \Illuminate\Http\Response
+     */
+    public function productsSellers(){
+        
+        $sellers = Seller::all('user_id');
+        $productos=[];
+        
+        for ($i = 0; $i < count($sellers); $i++) {
+            $prod = User::find($sellers[$i]->user_id);
+            $prod->seller->product;
+            
+            $productos[]=$prod;
+        }
+        
+        $json = json_encode($productos);
+        
+        return response($json)->header('Content-Type','application/json');
+        
     }
 }

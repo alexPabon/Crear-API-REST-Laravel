@@ -13,6 +13,7 @@ class Product extends Model
 {
    protected $fillable =['name','description','quantity','status','seller_id'];
    //protected $visible=['name','description','quantity','seller'];
-   protected $casts =['created_at'=>'date:d-m-Y'];  
+   protected $hidden =['created_at'];
+   protected $casts =['updated_at'=>'date:d-m-Y'];  
 }
  

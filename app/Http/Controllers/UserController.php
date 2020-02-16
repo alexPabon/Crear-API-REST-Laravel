@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use App\Repositories\VerifyUser;
 
 class UserController extends Controller
-{
-    public function __construct(){
-        $this->middleware('auth:api')->except('store');
+{    
+    protected $verifyUser;
+    
+    public function __construct(VerifyUser $verifyUser){
+        $this->middleware('auth:api')->except('store','index','show');        
+        $this->verifyUser = $verifyUser;
+
     }
     
     /**
@@ -17,7 +24,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {        
         $usuarios = User::all();
         $json = json_encode($usuarios);
         
@@ -42,8 +49,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        
+        $verify = $this->verifyUser->userEmail();
+        
+        if($verify)
+            return json_encode(['email'=>'Ya existe este email']);
+
         $registrarUsuario = request()->validate([
-            'name'=>'required|min:3|max:55',
+            'name'=>'required|string|min:3|max:55',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
@@ -52,10 +65,15 @@ class UserController extends Controller
         $nuevoUser->name = $request->name;
         $nuevoUser->email = $request->email;
         $nuevoUser->password = Hash::make($request->password);
-        $nuevoUser->api_token= Str::random(60);
-        $nuevoUser->save();
+        $nuevoUser->api_token= Str::random(80);
         
-        return $nuevoUser->api_token;
+        if(!$nuevoUser->save())
+            return "No se ha pidido registrar el usuario";
+        
+        $json = json_encode(['token'=>$nuevoUser->api_token]);
+
+        return response($json)->header('Content-Type','application/json');
+        
     }
 
     /**
@@ -66,7 +84,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $json = json_encode($user);
+        return response($json)->header('Content-Type','application/json');
+                
     }
 
     /**
@@ -89,7 +109,38 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $verify = $this->verifyUser->userUpdate()->isNotEmpty();
+
+        if($verify)
+            return json_encode(['email'=>'Ya existe este email']);
+        
+            return "dfasdf";
+
+        // if($verify)
+        //     return json_encode(['email'=>'Ya existe este email']);
+
+        // $request->user()->name = $request->name;
+        // $request->user()->email = $request->email;
+        // $request->user()->updte();
+
+        // $json = json_encode($request->user());
+
+        // return response($json)->header('Content-Type','application/json');         
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function cambiarToken(Request $request)
+    { 
+        $token = $request->user()->api_token = Str::random(80); 
+        $request->user()->update();
+
+        return redirect()->route('home');        
     }
 
     /**
@@ -102,4 +153,5 @@ class UserController extends Controller
     {
         //
     }
+        
 }
