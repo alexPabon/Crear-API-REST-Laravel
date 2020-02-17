@@ -11,7 +11,6 @@ use Illuminte\Support\Facades\Auth;
 use App\Repositories\VerifySeller;
 
 
-
 class ProductController extends Controller
 {
     protected $verifySeller;
@@ -55,9 +54,8 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreProduct $request)
-    {   
-        $validate = $request->validated();
-        
+    {           
+                
         $userId = auth()->user()->id;
         $seller = $this->verifySeller->seller($userId);
         
@@ -65,10 +63,10 @@ class ProductController extends Controller
             $seller = $this->verifySeller->newSeller($userId);            
         
         $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->quantity = $request->quantity;
-        $product->status = $request->status;
+        $product->name = \Purify::clean($request->name);
+        $product->description = \Purify::clean($request->description);
+        $product->quantity = \Purify::clean($request->quantity);
+        $product->status = \Purify::clean($request->status);
         $product->seller_id = $seller->id;
         
         $mensaje = ['store'=>'Guardado Correctamente'];
@@ -103,7 +101,7 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(StoreProduct $request, Product $product)
     {
         $userId = auth()->user()->id;
         $seller = $this->verifySeller->seller($userId);
@@ -112,10 +110,10 @@ class ProductController extends Controller
         if($product->seller_id!=$sellerId)
             abort('403','No Autorizado, No puedes editar este producto');
         
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->quantity = $request->quantity;
-        $product->status = $request->status;
+        $product->name = \Purify::clean($request->name);
+        $product->description = \Purify::clean($request->description);
+        $product->quantity = \Purify::clean($request->quantity);
+        $product->status = \Purify::clean($request->status); 
         $product->seller_id = $seller->id;
         
         $mensaje = ["update"=>"Actualizacion correcta"];

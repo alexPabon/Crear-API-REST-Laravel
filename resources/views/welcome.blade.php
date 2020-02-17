@@ -94,7 +94,7 @@
         			<p class="text-justify pt-3 lead">
         				<b>API REST</b> gratuita en línea que puede usar siempre que necesite algunos datos falsos.
                     	Es ideal para tutoriales, probar nuevas bibliotecas, compartir ejemplos de código, ...
-                    </p>
+                    </p>                 
                     <div id="recursos"></div>        			
         		</div>                               
             </div>            
@@ -143,12 +143,12 @@
                 </li>
                 <li>
                     PUT <span class="col-6 col-md-2 col-lg-1 btn btn-link mr-5 text-right">/api/products/2</span> update                   
-                    <pre class="col-12 col-md-8 col-lg-4 text-center bg bg-light px-0 py-2"><?php echo htmlspecialchars("<input type='hidden' name='_method' value='PUT'>")?></pre>                  
+                    <pre class="col-12 col-md-8 col-lg-4 text-center bg bg-light px-0 py-2">{{"<input type='hidden' name='_method' value='PUT'>"}}</pre>                  
                 </li>
                 <li class="mt-3">
                     DELETE <span class="col-6 col-md-2 col-lg-1 btn btn-link mr-5 text-right">/api/products/2</span>
                     <span id="otrasRutas" class="mx-2">destroy</span>
-                    <pre class="col-12 col-md-8 col-lg-4 text-center bg bg-light px-0 py-2"><?php echo htmlspecialchars("<input type='hidden' name='_method' value='DELETE'>")?></pre>                    
+                    <pre class="col-12 col-md-8 col-lg-4 text-center bg bg-light px-0 py-2">{{"<input type='hidden' name='_method' value='DELETE'>"}}</pre>                    
                 </li>
             </ul>
             <h3 class="h3">Otras Rutas</h3>
