@@ -38,16 +38,16 @@ class UserController extends Controller
     public function store(StoreUser $request)
     {           
         
-        $nuevoUser = new User;
-        $nuevoUser->name = \Purify::clean($request->name);
-        $nuevoUser->email = \Purify::clean($request->email);
-        $nuevoUser->password = Hash::make($request->password);
-        $nuevoUser->api_token= Str::random(80);        
+        $newUser = new User;
+        $newUser->name = \Purify::clean($request->name);
+        $newUser->email = \Purify::clean($request->email);
+        $newUser->password = Hash::make($request->password);
+        $newUser->api_token= Str::random(80);        
         
-        if(!$nuevoUser->save())
+        if(!$newUser->save())
             return 'No se ha pidido registrar el usuario';
         
-        $json = json_encode(['token'=>$nuevoUser->api_token]);
+        $json = json_encode(['token'=>$newUser->api_token]);
 
         return response($json)->header('Content-Type','application/json');        
     }

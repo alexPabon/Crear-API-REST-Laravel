@@ -13,7 +13,7 @@ class CreateCategoryProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('category_product', function (Blueprint $table) {
+        Schema::create('category_product', function (Blueprint $table) {            
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('product_id');            
             $table->timestamps();

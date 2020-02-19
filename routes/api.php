@@ -23,6 +23,9 @@ Route::put('user/cambiartoken','UserController@cambiarToken')->name('users.token
 Route::apiResource('products', 'ProductController');
 Route::get('myproducts','ProductController@myproducts')->name('products.my');
 Route::get('product/sellers','ProductController@productsSellers')->name('products.sellers');
+
 Route::apiResource('transactions', 'TransactionController');
 
 Route::apiResource('categories', 'CategoryController');
+Route::get('category/products','CategoryController@categoryProducts')->name('category.products');
+Route::get('mycategories','CategoryController@myCategories')->name('categories.my');

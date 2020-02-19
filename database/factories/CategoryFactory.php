@@ -6,9 +6,10 @@ use App\Category;
 use Faker\Generator as Faker;
 
 $factory->define(Category::class, function (Faker $faker) {
-    $categorias = ['hogar y cocina', 'Electronica','Deporte','Belleza'];
+    $categorias = ['Juguetes', 'Belleza','Equipaje','Libros'];
     
     return [
+        'user_id'=>$faker->numberBetween(10,18),
         'name'=>$faker->unique()->randomElement($categorias),
         'description'=>$faker->text($maxNBChar=150),
     ];

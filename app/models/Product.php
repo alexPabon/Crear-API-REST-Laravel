@@ -14,6 +14,10 @@ class Product extends Model
    protected $fillable =['name','description','quantity','status','seller_id'];
    //protected $visible=['name','description','quantity','seller'];
    protected $hidden =['created_at'];
-   protected $casts =['updated_at'=>'date:d-m-Y'];  
+   protected $casts =['updated_at'=>'date:d/m/Y'];
+   
+   public function categoryProduct(){
+       return $this->hasMany(CategoryProduct::class);
+   }
 }
  
