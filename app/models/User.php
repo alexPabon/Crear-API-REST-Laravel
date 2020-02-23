@@ -43,10 +43,20 @@ class User extends Authenticatable
     /**
      *
      * obtiene todos los vendedores
+     * @return App\Seller
      */
     public function seller(){
         
         return $this->hasOne(Seller::class);
         
-    } 
+    }
+    
+    /**
+     *
+     * obtiene todos los compradores
+     * @return App\Buyer
+     */
+    public function buyer(){
+        return $this->hasOne(Buyer::class);
+    }
 }

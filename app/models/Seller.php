@@ -10,6 +10,11 @@ class Seller extends Model
     
     protected $hidden = ['created_at','updated_at'];
     
+    /**
+     *
+     * obtiene todos los productos
+     * @return Illuminate\Database\Eloquent\Collection
+     */
     public function product(){
         return $this->hasMany(Product::class);
     }   

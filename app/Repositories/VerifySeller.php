@@ -4,11 +4,7 @@ namespace App\Repositories;
 use App\User;
 use App\Seller;
 
-class VerifySeller{    
-    
-    public function __construct(){       
-        
-    }  
+class VerifySeller{
     
     /*
      * Comproeba que el exista el vendedor

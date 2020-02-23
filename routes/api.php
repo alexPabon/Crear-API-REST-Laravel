@@ -25,7 +25,12 @@ Route::get('myproducts','ProductController@myproducts')->name('products.my');
 Route::get('product/sellers','ProductController@productsSellers')->name('products.sellers');
 
 Route::apiResource('transactions', 'TransactionController');
+Route::get('mytransactions','TransactionController@myTransactions')->name('transactions.my');
 
 Route::apiResource('categories', 'CategoryController');
 Route::get('category/products','CategoryController@categoryProducts')->name('category.products');
 Route::get('mycategories','CategoryController@myCategories')->name('categories.my');
+
+Route::post('add/productcategory','CategoryProductController@store');
+Route::delete('remove/productcategory','CategoryProductController@destroy');
+

@@ -7,6 +7,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\CategoryProduct;
+use App\Http\Requests\StoreCategory;
 
 
 class CategoryController extends Controller
@@ -14,6 +15,7 @@ class CategoryController extends Controller
     public function __construct(){
         $this->middleware('auth:api')->except('index','show','categoryProducts');
     }
+    
     /**
      * Display a listing of the resource.
      *
@@ -32,11 +34,14 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCategory $request)
     {
+        $userId = auth()->user()->id;
+
         $newCategory = new Category();
-        $newCategory->name = $request->name;
-        $newCategory->description = $request->description;
+        $newCategory->name = trim(\Purify::clean($request->name));
+        $newCategory->description = trim(\Purify::clean($request->description));
+        $newCategory->user_id = $userId;
         
         $newCategory->save();
         
@@ -66,9 +71,26 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Category $category)
-    {
-        $category->name = $request->name;
-        $category->description = $request->description;
+    { 
+        $userId = auth()->user()->id;
+        $userCategory = $category->user_id;
+        
+        if($userId!=$userCategory)
+            abort('403','No Autorizado, No puedes Editar esta categoria');
+        
+        $validate = $request->validate([                
+                'description'=>'required|string|min:10|max:500',
+            ]);
+
+        if(trim($request->name) != trim($category->name))
+            $validate = $request->validate([
+                'name'=>'required|string|min:3|max:50|unique:categories',
+                'description'=>'required|string|min:10|max:500',
+            ]);
+            
+        
+        $category->name = trim(\Purify::clean($request->name));
+        $category->description = trim(\Purify::clean($request->description));
         
         $category->update();
 
@@ -85,7 +107,14 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $userId = auth()->user()->id;
+        $userCategory = $category->user_id;
+        
+        if($userId!=$userCategory)
+            abort('403','No Autorizado, No puedes Eliminar esta categoria');
+        
         $mensaje = ['delete'=>'Categoria Eliminada'];
+        
         if(!$category->delete())
             $mensaje = ['delete'=>'No se elimino Categoria'];
             
@@ -99,11 +128,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function categoryProducts(){
-        
-//         $catProd = CategoryProduct::where('category_id',2)->where('product_id',4)->first();       
-//         if(!is_null($catProd))
-//             $catProd->product;        
+    public function categoryProducts(){      
        
         $categories = Category::all();       
         
@@ -111,6 +136,7 @@ class CategoryController extends Controller
             $cat_product = Category::find($categories[$j]->id);
             $cat_product = $cat_product->categoryProduct;
             $all_CatProducts = [];
+            
             for ($i = 0; $i < count($cat_product); $i++) {
                 $cId = $cat_product[$i]->category_id;
                 $pId = $cat_product[$i]->product_id;
@@ -120,8 +146,7 @@ class CategoryController extends Controller
                 if(!is_null($catProduct))
                     $catProduct->product;
                 
-                $all_CatProducts[]=$catProduct;
-                
+                $all_CatProducts[]=$catProduct;                
             }
             
             Arr::add($categories[$j],'category_product',$all_CatProducts);
@@ -144,15 +169,5 @@ class CategoryController extends Controller
         $json = json_encode($categories);
         
         return response($json)->header('Content-Type','application/json');
-    }
-    
-    /**
-     * relaciona la categoria con el producto
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function addCategoryProduct(Request $request){
-        return "addCategoryProduct"; 
-    }
+    }   
 }

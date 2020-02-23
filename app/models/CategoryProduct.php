@@ -9,7 +9,7 @@ class CategoryProduct extends Model
 {
     protected $table = "category_product";
     
-    protected $hidden =['created_at'];
+    protected $hidden =['created_at','id'];
     
     protected $casts = ['updated_at'=>'date:d/m/Y'];
     

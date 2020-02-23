@@ -63,10 +63,10 @@ class ProductController extends Controller
             $seller = $this->verifySeller->newSeller($userId);            
         
         $product = new Product();
-        $product->name = \Purify::clean($request->name);
-        $product->description = \Purify::clean($request->description);
+        $product->name = trim(\Purify::clean($request->name));
+        $product->description = trim(\Purify::clean($request->description));
         $product->quantity = \Purify::clean($request->quantity);
-        $product->status = \Purify::clean($request->status);
+        $product->status = trim(\Purify::clean($request->status));
         $product->seller_id = $seller->id;
         
         $mensaje = ['store'=>'Guardado Correctamente'];
@@ -110,10 +110,10 @@ class ProductController extends Controller
         if($product->seller_id!=$sellerId)
             abort('403','No Autorizado, No puedes editar este producto');
         
-        $product->name = \Purify::clean($request->name);
-        $product->description = \Purify::clean($request->description);
+        $product->name = trim(\Purify::clean($request->name));
+        $product->description = trim(\Purify::clean($request->description));
         $product->quantity = \Purify::clean($request->quantity);
-        $product->status = \Purify::clean($request->status); 
+        $product->status = trim(\Purify::clean($request->status));
         $product->seller_id = $seller->id;
         
         $mensaje = ["update"=>"Actualizacion correcta"];

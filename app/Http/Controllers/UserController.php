@@ -39,8 +39,8 @@ class UserController extends Controller
     {           
         
         $newUser = new User;
-        $newUser->name = \Purify::clean($request->name);
-        $newUser->email = \Purify::clean($request->email);
+        $newUser->name = trim(\Purify::clean($request->name));
+        $newUser->email = trim(\Purify::clean($request->email));
         $newUser->password = Hash::make($request->password);
         $newUser->api_token= Str::random(80);        
         

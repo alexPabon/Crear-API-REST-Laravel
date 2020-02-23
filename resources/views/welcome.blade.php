@@ -92,7 +92,7 @@
                 </div>
                 <div class="container text-left">
         			<p class="text-justify pt-3 lead">
-        				<b>API REST</b> gratuita en línea que puede usar siempre que necesite algunos datos falsos.
+        				<b>API REST</b> gratuita en línea y se puede usar siempre que necesite algunos datos falsos.
                     	Es ideal para tutoriales, probar nuevas bibliotecas, compartir ejemplos de código, ...
                     </p>                 
                     <div id="recursos"></div>        			
@@ -135,7 +135,7 @@
             </ul>
 
             <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
-                Para las siguientes rutas el usuario se debe autenticar con <b>api_token</b>
+                Para las siguientes rutas el usuario se debe autenticar con <a href="{{route('home')}}"><b>api_token</b></a>
             </p>
             <ul>
                 <li>
@@ -157,10 +157,28 @@
             </p>
             <ul>
                 <li>
-                    GET <a class="col-6 col-md-2 col-lg-1 btn btn-link mr-5 text-right" href="{{route('products.sellers')}}">/api/product/sellers</a>
+                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/product/sellers</b></span>
                 </li>
                 <li>
-                    GET <span class="col-6 col-md-2 col-lg-1 btn btn-link mr-5 text-right" href="{{route('products.index')}}">/api/myproducts</span> <b>api_token</b>
+                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/myproducts</b></span> <b>api_token</b><hr>
+                </li>
+                <li>
+                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/category/products</b></span>
+                </li>
+                <li>
+                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/mycategories</b></span> <b>api_token</b><hr>                    
+                </li>
+                <li>
+                    <span>POST</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/add/productcategory</b></span><b>api_token</b>
+                </li>
+                <li>
+                    <span>DELETE</span><span class="col-6 col-md-3 col-lg-2  mr-2 text-right text-primary" ><b>/api/remove/productcategory</b></span> <b>api_token</b>
+                    <pre class="col-12 col-md-8 col-lg-4 text-center bg bg-light px-0 py-2"> {{"{'category_id':5,'product_id':2}"}}</pre><hr>
+                </li>
+                <li>
+                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-2 text-right text-primary" ><b>/api/mytransactions</b></span> 
+                    <b>api_token</b><hr>
+                    
                 </li>
             </ul>
             <p class="lead">
