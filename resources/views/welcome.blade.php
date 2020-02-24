@@ -94,7 +94,9 @@
         			<p class="text-justify pt-3 lead">
         				<b>API REST</b> gratuita en línea y se puede usar siempre que necesite algunos datos falsos.
                     	Es ideal para tutoriales, probar nuevas bibliotecas, compartir ejemplos de código, ...
-                    </p>                 
+                    </p>
+                    @includeWhen($errors->any(),'layouts.error')   	
+					@includeWhen(Session::has('success'),'layouts.success')                 
                     <div id="recursos"></div>        			
         		</div>                               
             </div>            
@@ -186,7 +188,7 @@
                 <b><a class="link" href="https://github.com/alexPabon/Crear-API-REST-Laravel" target="_Blank">GITHUB</a></b>
                 ,puedes tener tu propio servidor REST en segundos.
             </p>
-        </div>           
+        </div>                  
 		@includeif('contact.footer',['autor'=>'Alexander, implementando plantillas Blade'])
     </body>
 </html>
