@@ -14,7 +14,11 @@
 		Asunto: {{$mensaje['asunto']}}		
 	</p>
 	<p>
+<<<<<<< HEAD
 		Mensaje:<br>{!!nl2br($mensaje['mensaje'])!!}
+=======
+		Mensaje:<br>{{nl2br($mensaje['mensaje'])}}
+>>>>>>> origin/master
 	</p>
 </body>
 </html>

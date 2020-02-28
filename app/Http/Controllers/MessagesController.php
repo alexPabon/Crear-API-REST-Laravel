@@ -44,13 +44,22 @@ class MessagesController extends Controller
         ]);
         
         
+<<<<<<< HEAD
+=======
+        
+        
+>>>>>>> origin/master
         Mail::to('alepabon@gmail.com')->queue(new MessageReceived($enviarMensaje));
         
         
         //return new MessageReceived($enviarMensaje);
         
+<<<<<<< HEAD
         return back()->with('success',"El Email se ha enviado correctamente!");    
         
+=======
+        return back()->with('success',"El Email se ha enviado correctamente!");
+>>>>>>> origin/master
     }
 
     

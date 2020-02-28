@@ -73,7 +73,11 @@ class Handler extends ExceptionHandler
     {
         $errors = $e->validator->errors()->getMessages();
         
+<<<<<<< HEAD
         if($request->email)
+=======
+        if($request->miEmail)
+>>>>>>> origin/master
             return redirect()->back()
                     ->withInput($request->input())->withErrors($errors);
         

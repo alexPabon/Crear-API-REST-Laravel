@@ -247,7 +247,11 @@
                 <b><a class="link" href="https://github.com/alexPabon/Crear-API-REST-Laravel" target="_Blank">GITHUB</a></b>
                 ,puedes tener tu propio servidor REST en segundos.
             </p>
+<<<<<<< HEAD
         </div>                      
+=======
+        </div>                  
+>>>>>>> origin/master
 		@includeif('contact.footer',['autor'=>'Alexander, implementando plantillas Blade'])
     </body>
 </html>
