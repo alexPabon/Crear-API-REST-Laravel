@@ -7,7 +7,7 @@
     </div>   
     <div class="my-3">
     	<h3>contacto:</h3>
-        <form id="formContacto" autocomplete="off" class="col-12 col-sm-7 col-lg-6 border border-light p-3 rounded" method="post" action="">
+        <form id="formContacto" autocomplete="off" class="col-12 col-sm-7 col-lg-6 border border-light p-3 rounded" method="post" action="{{route('send.mail')}}">
          {{csrf_field()}} 
         	<ul class="list-group p-0">
         		<li class="list-group lead">
@@ -63,7 +63,7 @@
         		</li>
         	</ul>
         </form>
-        <div id="msnError" class="col-12 col-sm-7 col-lg-6 p-0"></div> 
+        <div id="msnError" class="col-12 col-sm-7 col-lg-6 p-0"></div>         
     </div> 
      <p class="Vh-100 lead">
        Aplicacion creada por <b>{{$autor}}</b> como ejemplo.<br>

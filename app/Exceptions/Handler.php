@@ -73,7 +73,11 @@ class Handler extends ExceptionHandler
     {
         $errors = $e->validator->errors()->getMessages();
         
-        return response()->json($errors,422);        
+        if($request->email)
+            return redirect()->back()
+                    ->withInput($request->input())->withErrors($errors);
+        
+       return response()->json($errors,422);        
         
     }    
   

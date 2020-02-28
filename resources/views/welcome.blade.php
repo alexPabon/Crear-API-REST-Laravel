@@ -3,6 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- CSRF Token -->
+    	<meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Laravel</title>
         <script src="{{ asset('js/app.js') }}" defer></script>
@@ -66,13 +69,15 @@
             }            
         </style>
     </head>
-    <body>
+    <body id="inicio">
         <div class="fixed-top">
             @includeif('auth.menu')    
-        </div>      
+        </div>
+        <div class="fixed-top col-3 col-md-2 col-lg-1 mx-auto p-0 pt-3 text-center">
+            <a href="#inicio" class="bg bg-light rounded-pill px-2 py-1 font-weight-bold">Subir</a>
+        </div>           
         
-        <div class="flex-center position-ref full-height">
-          
+        <div class="flex-center position-ref full-height">     
 
             <div class="content p-2">
                 <div class="title m-b-md">
@@ -84,7 +89,9 @@
                     <a class="btn btn-light mx-2 my-1" href="#recursos">Recursos</a>
                     <a class="btn btn-light mx-2 my-1" href="#rutas">Rutas</a>
                     <a class="btn btn-light mx-2 my-1" href="#otrasRutas">Otras Rutas</a>
-                    <a class="btn btn-light mx-2 my-1" href="https://github.com/alexPabon/Crear-API-REST-Laravel" target="_Blank">GITHUB</a>
+                    <a class="btn btn-light mx-2 my-1" href="https://github.com/alexPabon/Crear-API-REST-Laravel"
+                     target="_Blank">GITHUB</a>
+                    <a class="btn btn-light mx-2 my-1" href="#datosFormulario">Datos para Formulario</a>
                     {{--<a href="https://nova.laravel.com">Nova</a>
                     <a href="https://forge.laravel.com">Forge</a>
                     <a href="https://vapor.laravel.com">Vapor</a>
@@ -94,11 +101,13 @@
         			<p class="text-justify pt-3 lead">
         				<b>API REST</b> gratuita en línea y se puede usar siempre que necesite algunos datos falsos.
                     	Es ideal para tutoriales, probar nuevas bibliotecas, compartir ejemplos de código, ...
-                    </p>                 
+                    </p>
+                    @includeWhen($errors->any(),'layouts.error')   	
+					@includeWhen(Session::has('success'),'layouts.success')                 
                     <div id="recursos"></div>        			
         		</div>                               
             </div>            
-        </div>
+        </div>         
         <div  class="container">
             <h2  class="h2">Recursos</h2>
             <ul>
@@ -166,7 +175,8 @@
                     <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/category/products</b></span>
                 </li>
                 <li>
-                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/mycategories</b></span> <b>api_token</b><hr>                    
+                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/mycategories</b></span> <b>api_token</b><hr>
+                    <span class="bg bg-info px-2"><b>Relacionar los productos a las categorias</b></span>                    
                 </li>
                 <li>
                     <span>POST</span><span class="col-6 col-md-3 col-lg-2  mr-3 text-right text-primary"><b>/api/add/productcategory</b></span><b>api_token</b>
@@ -176,17 +186,68 @@
                     <pre class="col-12 col-md-8 col-lg-4 text-center bg bg-light px-0 py-2"> {{"{'category_id':5,'product_id':2}"}}</pre><hr>
                 </li>
                 <li>
-                    <span>GET</span><span class="col-6 col-md-3 col-lg-2  mr-2 text-right text-primary" ><b>/api/mytransactions</b></span> 
+                    <span>GET</span><span id="datosFormulario" class="col-6 col-md-3 col-lg-2  mr-2 text-right text-primary" ><b>/api/mytransactions</b></span> 
                     <b>api_token</b><hr>
                     
                 </li>
             </ul>
+            <div>
+                <h2>Introduciendo los datos a través de un formulario</h2>
+                <h3>Products</h3>
+                <div class="col-12 col-md-8 col-lg-6 d-md-inline-flex">
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        POST <b> Store</b><br>
+                        {<br>&nbsp name: 'string', <br> &nbsp description: 'string',<br>
+                        &nbsp quantity: int,<br> &nbsp status: 'string'<br>}
+                    </p>
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        PUT <b>Update</b><br>
+                        {<br>&nbsp _method:'PUT',<br> &nbsp name: 'string', <br> &nbsp description: 'string',<br>
+                        &nbsp quantity: int,<br> &nbsp status: 'string'<br>}
+                    </p>                   
+                </div>
+                <h3>Transactions</h3>
+                <p>Cuando se crea una transaccion y ponemos la cantidad de productos, estos se restaran de la cantidad del producto seleccionado</p>
+                <div class="col-12 col-md-8 col-lg-6 d-md-inline-flex">
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        POST <b> Store</b><br>
+                        {<br>&nbsp quantity_products: int, <br> &nbsp product_id: int,<br>}
+                    </p>
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        PUT <b>Update</b><br>
+                        {<br>&nbsp _method:'PUT',<br>&nbsp quantity_products: int, <br>}
+                    </p>                   
+                </div>
+                <h3>Categories</h3>
+                <div class="col-12 col-md-8 col-lg-6 d-md-inline-flex">
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        POST <b> Store</b><br>
+                        {<br>&nbsp name: 'string', <br> &nbsp description: 'string',<br>}
+                    </p>
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        PUT <b>Update</b><br>
+                        {<br>&nbsp _method:'PUT',<br> &nbsp name: 'string', <br> &nbsp description: 'string',<br>}
+                    </p>                   
+                </div>
+                <h3>Users</h3>
+                <div class="col-12 col-md-8 col-lg-6 d-md-inline-flex">
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        POST <b> Store</b><br>
+                        {<br>&nbsp name: 'string', <br> &nbsp email: 'string',<br>&nbsp password: 'string',<br>}
+                    </p>
+                    <p class="col-12 col-md-8 col-lg-6 bg bg-light card-body lead">
+                        PUT <b>Update</b><br>
+                        {<br>&nbsp _method:'PUT',<br>&nbsp name: 'string', <br> &nbsp email: 'string',<br>}
+                    </p>                   
+                </div>
+                
+            </div>            
             <p class="lead">
                 Con un simple repositorio
                 <b><a class="link" href="https://github.com/alexPabon/Crear-API-REST-Laravel" target="_Blank">GITHUB</a></b>
                 ,puedes tener tu propio servidor REST en segundos.
             </p>
-        </div>           
+        </div>                      
 		@includeif('contact.footer',['autor'=>'Alexander, implementando plantillas Blade'])
     </body>
 </html>

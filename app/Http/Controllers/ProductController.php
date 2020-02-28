@@ -87,7 +87,7 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
-    {        
+    {   
         $productoId = Product::find($product->id);
         $json = json_encode($productoId);
         
